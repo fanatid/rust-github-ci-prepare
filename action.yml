@@ -2,6 +2,11 @@ name: rust project preparation
 author: Kirill Fomichev
 description: Basic steps for Rust projects
 
+inputs:
+  cache-version:
+    description: Cache version
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -13,9 +18,9 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           ./target
-        key: v0001-${{ matrix.os }}-rust-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ inputs.cache-version || 'v0001' }}-${{ matrix.os }}-rust-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
-          v0001-${{ matrix.os }}-rust-${{ hashFiles('rust-toolchain.toml') }}
+          ${{ inputs.cache-version || 'v0001' }}-${{ matrix.os }}-rust-${{ hashFiles('rust-toolchain.toml') }}
 
     - shell: bash
       run: |
